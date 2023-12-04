@@ -1,0 +1,61 @@
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000; /* Màu nền của preloader */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 1000; /* Đảm bảo preloader ở trên cùng */
+  opacity: 0; /* Mặc định ẩn preloader */
+  transition: opacity 0.5s ease-in-out; /* Hiệu ứng transition cho opacity */
+}
+.preloader.active {
+  opacity: 1; /* Hiện preloader khi có class active */
+  pointer-events: all;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #ff2c78; /* Màu đỉnh của preloader */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    color: conic-gradient(#3498db, #e74c3c, #f39c12, #2ecc71);
+  }
+  100% {
+    transform: rotate(360deg);
+    color: conic-gradient(#2ecc71, #3498db, #e74c3c, #f39c12);
+  }
+}
+.preloader h1 {
+  animation:
+    typing 6s steps(1000, end),
+    blink-caret 15s step-end infinite;
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: orange;
+  }
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}

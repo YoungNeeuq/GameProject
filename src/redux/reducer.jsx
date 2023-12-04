@@ -1,11 +1,10 @@
 const initState = {
   result: '',
-  computerChoose: 0,
+  computerChoose: 1,
   numberOfTurns: 0
 }
 // eslint-disable-next-line no-unused-vars
 const rootReducer = (state = initState, action) => {
-  console.log({ state, action })
   switch (action.type) {
     case 'play':
       return {

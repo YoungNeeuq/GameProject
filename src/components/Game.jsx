@@ -4,13 +4,17 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { playGame } from '../redux/actions'
 import { gameSelector } from '../redux/selectors'
+import './game.css'
 const Game = () => {
   const dispatch = useDispatch()
   const gameList = useSelector(gameSelector)
   const [choose, setChoose] = useState(1)
-  const [randomNumber, setRandomNumber] = useState(null)
+  const [win, setWin] = useState(0)
+  const [randomNumber, setRandomNumber] = useState(3)
   const availableNumbers = [1, 2, 3]
   const [flatRender, setFlatRender] = useState(false)
+  const [isAnimationDone, setIsAnimationDone] = useState(false)
+  const [buttonDisabled, setButtonDisabled] = useState(false)
 
   // Computer random rock-paper-scissors
   const generateRandomNumber = () => {
@@ -40,48 +44,103 @@ const Game = () => {
       }
     }
   }
-
-  const handleRenderUser = () => {
-    if (choose === 1) {
-      return 'Kéo'
-    } else if (choose === 2) {
-      return 'Búa'
-    } else {
-      return 'Bao'
-    }
-  }
-
-  const handleRenderComputer = () => {
-    if (gameList.computerChoose === 1) {
-      return 'Kéo'
-    } else if (gameList.computerChoose === 2) {
-      return 'Búa'
-    } else {
-      return 'Bao'
-    }
-  }
-
   // handle Play Game
   const handlePlay = () => {
+    setTimeout(() => {
+      dispatch(playGame({ result: handleLogic(), computerChoose: randomNumber }))
+    }, 1200)
+
     setFlatRender(true)
+    setIsAnimationDone(false)
     generateRandomNumber()
     handleLogic()
-    console.log(handleLogic(), choose, randomNumber)
-    dispatch(playGame({ result: handleLogic(), computerChoose: randomNumber }))
+
+    //Calculate round win
+    if (handleLogic() === 'Người chơi thắng') {
+      setTimeout(() => {
+        setWin(win + 1)
+      }, 1200)
+    }
+
+    // Prevent clicking while running
+    if (!buttonDisabled) {
+      setButtonDisabled(true)
+
+      setTimeout(() => {
+        setButtonDisabled(false)
+      }, 1300)
+    }
+  }
+
+  //End animation play
+  const handleAnimationEnd = () => {
+    setIsAnimationDone(true)
   }
 
   return (
-    <div>
-      <button onClick={handlePlay}>Play</button>
-      <div className='flex gap-10'>
-        <button onClick={() => handleChoose(1)}>Kéo</button>
-        <button onClick={() => handleChoose(2)}>Búa</button>
-        <button onClick={() => handleChoose(3)}>Bao</button>
+    <div
+      className='mx-auto w-fit text-center bg-cover bg-center h-screen'
+      style={{ backgroundImage: `url('../../assets/img/bgr.jpg')` }}
+    >
+      <div className='text-white font-bold text-xl p-5 font-poppins'>
+        <p className={` ${!flatRender ? 'hidden' : 'block'} text-4xl mb-5`}> {gameList.result}</p>
+        <p className='mb-2'>Số lần chơi : {gameList.numberOfTurns}</p>
+        <p>Số lần thắng : {win}</p>
       </div>
-      <p>Your choose : {handleRenderUser()}</p>
-      {flatRender ? <p>Computer choose : {handleRenderComputer()}</p> : ''}
-      {flatRender ? <p> Result : {gameList.result}</p> : ''}
-      <p>Số lần chơi : {gameList.numberOfTurns}</p>
+      <div className=' flex my-12 gap-20 justify-center'>
+        <div className={` ${!isAnimationDone ? 'animate-wiggle w-fit' : 'w-fit'}`} onAnimationEnd={handleAnimationEnd}>
+          <img
+            src={!isAnimationDone ? `../../assets/img/${choose}.png` : `../../assets/img/${choose}.png`}
+            alt=''
+            className='w-2/4 mx-auto'
+          />
+        </div>
+        <div className={` ${!isAnimationDone ? 'animate-wiggle w-fit' : 'w-fit'}`} onAnimationEnd={handleAnimationEnd}>
+          <img
+            src={!isAnimationDone ? '../../assets/img/1.png' : `../../assets/img/${gameList.computerChoose}.png`}
+            alt=''
+            className='transform scale-x-[-1] w-2/4 mx-auto'
+          />
+        </div>
+      </div>
+      <div className='flex gap-20 justify-center mb-10'>
+        <img
+          src='../../assets/img/1.png'
+          alt=''
+          onClick={() => handleChoose(1)}
+          className={`w-[5%] cursor-pointer rounded-xl ${
+            choose === 1 ? 'border-bgrbtsignin border-4 scale-110' : 'border-4'
+          } border-4 px-2 py-1`}
+          style={{ pointerEvents: buttonDisabled ? 'none' : 'auto' }}
+        />
+        <img
+          src='../../assets/img/2.png'
+          alt=''
+          onClick={() => handleChoose(2)}
+          className={`w-[5%] cursor-pointer rounded-xl ${
+            choose === 2 ? 'border-bgrbtsignin border-4 scale-110' : 'border-4'
+          } border-4 px-2 py-1`}
+          style={{ pointerEvents: buttonDisabled ? 'none' : 'auto' }}
+        />
+        <img
+          src='../../assets/img/3.png'
+          alt=''
+          onClick={() => handleChoose(3)}
+          className={`w-[5%] cursor-pointer rounded-xl ${
+            choose === 3 ? 'border-bgrbtsignin border-4 scale-110' : 'border-4'
+          } border-4 px-2 py-1`}
+          style={{ pointerEvents: buttonDisabled ? 'none' : 'auto' }}
+        />
+      </div>
+      <button
+        className={`px-12 py-5 ${
+          !buttonDisabled ? 'bg-bgrbtsignin' : 'bg-slate-600'
+        } rounded-xl text-white text-2xl font-poppins font-bold `}
+        onClick={handlePlay}
+        disabled={buttonDisabled}
+      >
+        Play
+      </button>
     </div>
   )
 }
