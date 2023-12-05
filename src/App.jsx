@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Game from './components/Game'
 import Preloader from './Preloader/Preloader'
+import Todo from './components/todo'
 const App = () => {
   const [loading, setLoading] = useState(true)
 
@@ -17,6 +18,7 @@ const App = () => {
     <>
       <Preloader active={loading}></Preloader>
       <Game style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease-in-out' }}></Game>
+      <Todo style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.5s ease-in-out' }}></Todo>
     </>
   )
 }
