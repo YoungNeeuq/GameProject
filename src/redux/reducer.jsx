@@ -18,20 +18,3 @@ const rootReducer = (state = initState, action) => {
   }
 }
 export default rootReducer
-// import { createSlice } from '@reduxjs/toolkit'
-// const rootSlice = createSlice({
-//   name: 'game',
-//   initState: {
-//     result: '',
-//     computerChoose: 0,
-//     numberOfTurns: 0
-//   },
-//   reducers: {
-//     play: (state, action) => {
-//       state.result = action.payload.result
-//       state.numberOfTurns = state.numberOfTurns + 1
-//       state.computerChoose = action.payload.computerChoose
-//     }
-//   }
-// })
-// export default rootSlice
